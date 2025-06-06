@@ -1,0 +1,41 @@
+server:
+  port: 8082
+
+#spring:
+#  kafka:
+#    bootstrap-servers: localhost:9092
+#    properties:
+#      application.id: kafka-streams-join-app
+#      default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+#      default.value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+#      commit.interval.ms: 1000
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#    consumer:
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    streams:
+      application-id: kafka-streams-join-app-11
+#    properties:
+#      application.id: kafka-streams-join-app
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+kafka:
+  topics:
+    inputA: TOPIC_A
+    inputB: TOPIC_B
+    output: TOPIC_C
+    dlq: TOPIC_DLQ
+  join:
+    required-country: "001"
+
