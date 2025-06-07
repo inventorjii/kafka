@@ -38,15 +38,18 @@ public class JoinStreamResults {
 
     @Bean
     public KStream<String, ?> kStream(StreamsBuilder builder) {
+        //SerDes (Serializers/Deserializers)
         JsonSerde<TopicMessageA> wrapperASerde = new JsonSerde<>(TopicMessageA.class);
         JsonSerde<TopicMessageB> wrapperBSerde = new JsonSerde<>(TopicMessageB.class);
         JsonSerde<TopicValueA> valueASerde = new JsonSerde<>(TopicValueA.class);
         JsonSerde<TopicValueB> valueBSerde = new JsonSerde<>(TopicValueB.class);
         JsonSerde<JoinedResult> resultSerde = new JsonSerde<>(JoinedResult.class);
 
+        // Date Formatter for Validation
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'")
                 .withZone(ZoneOffset.UTC);
 
+        // Reading Streams from Topics A and B
         KStream<String, TopicMessageA> topicAStream = builder.stream(topicA, Consumed.with(Serdes.String(), wrapperASerde));
         KStream<String, TopicMessageB> topicBStream = builder.stream(topicB, Consumed.with(Serdes.String(), wrapperBSerde));
 
@@ -54,6 +57,7 @@ public class JoinStreamResults {
         topicAStream.foreach((key, value) -> logger.info("Raw A: {} => {}", key, value));
         topicBStream.foreach((key, value) -> logger.info("Raw B: {} => {}", key, value));
 
+        // Filtering Valid Messages and Mapping to Join Key
         KStream<String, TopicValueA> filteredA = topicAStream
                 .filter((key, msg) -> msg != null && msg.value != null && isValid(msg.value, formatter))
                 .map((key, msg) -> KeyValue.pair(buildJoinKey(msg.value.catalog_number, msg.value.country), msg.value));
@@ -65,6 +69,7 @@ public class JoinStreamResults {
         filteredA.foreach((key, value) -> logger.info("Filtered A: {} => {}", key, value));
         filteredB.foreach((key, value) -> logger.info("Filtered B: {} => {}", key, value));
 
+        //Convert Streams to Tables for Join
         KTable<String, TopicValueA> tableA = filteredA.toTable(Materialized.with(Serdes.String(), valueASerde));
         KTable<String, TopicValueB> tableB = filteredB.toTable(Materialized.with(Serdes.String(), valueBSerde));
 
