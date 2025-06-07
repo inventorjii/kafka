@@ -10,7 +10,7 @@ This application is a Kafka Streams-based service that reads messages from two K
     - `catalog_number` must be exactly 5 characters
     - Dates must follow `yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ` format
 - Joins registration data from `topicA` with sales data from `topicB`
-- Emits only the final joined result using Kafka Streams `suppress()`
+- Emits only the final joined result using Kafka Streams.
 - Writes final output to `topicC`
 
 ## Deatils
