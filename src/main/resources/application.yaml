@@ -20,7 +20,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     streams:
-      application-id: kafka-streams-join-app-20
+      application-id: kafka-streams-join-app-21
 #    properties:
 #      application.id: kafka-streams-join-app
     producer:

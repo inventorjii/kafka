@@ -15,7 +15,7 @@ This application is a Kafka Streams-based service that reads messages from two K
 
 ## Deatils
 
-- Main logic for joining two records from 2 topics is present in - `StreamProcessor.java` file in `config` folder.
+- Main logic for joining two records from 2 topics is present in - `JoinStreamResults.java` file in `config` folder.
 - I am adding records to topic A and B via rest API present in `controller` folder.
 - Classes present in model folder are DTO classes.
 - other classes and packages are helper packages.
