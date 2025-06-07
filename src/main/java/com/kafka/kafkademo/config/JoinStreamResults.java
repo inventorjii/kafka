@@ -58,9 +58,13 @@ public class JoinStreamResults {
                 .filter((key, msg) -> msg != null && msg.value != null && isValid(msg.value, formatter))
                 .map((key, msg) -> KeyValue.pair(buildJoinKey(msg.value.catalog_number, msg.value.country), msg.value));
 
+
+        System.out.println("I am here 1");
         KStream<String, TopicValueB> filteredB = topicBStream
                 .filter((key, msg) -> msg != null && msg.value != null && isValid(msg.value, formatter))
                 .map((key, msg) -> KeyValue.pair(buildJoinKey(msg.value.catalog_number, msg.value.country), msg.value));
+
+        System.out.println("I am here 2");
 
         filteredA.foreach((key, value) -> logger.info("Filtered A: {} => {}", key, value));
         filteredB.foreach((key, value) -> logger.info("Filtered B: {} => {}", key, value));
@@ -73,7 +77,7 @@ public class JoinStreamResults {
             return new JoinedResult(a, b);
         }, Materialized.with(Serdes.String(), resultSerde));
 
-        joined.suppress(Suppressed.untilTimeLimit(Duration.ofMillis(5000), Suppressed.BufferConfig.unbounded()))
+        joined.suppress(Suppressed.untilTimeLimit(Duration.ofMillis(500), Suppressed.BufferConfig.unbounded()))
                 .toStream()
                 .peek((key, value) -> logger.info("Emitting final result: {} => {}", key, value))
                 .to(topicC, Produced.with(Serdes.String(), resultSerde));
@@ -86,6 +90,7 @@ public class JoinStreamResults {
     }
 
     private boolean isValid(TopicValueA value, DateTimeFormatter formatter) {
+        System.out.println(value.catalog_number);
         return "001".equals(value.country)
                 && value.catalog_number != null && value.catalog_number.length() == 5
                 && isValidDate(value.selling_status_date, formatter);

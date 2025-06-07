@@ -32,6 +32,11 @@ This application is a Kafka Streams-based service that reads messages from two K
 TOPIC_A data - 
 
 {
+"key": {
+"catalog_number": "29525",
+"country": "001"
+},
+"value": {
 "catalog_number": "29525",
 "is_selling": true,
 "model": "29525",
@@ -40,20 +45,34 @@ TOPIC_A data -
 "registration_number": "REG03814",
 "selling_status_date": "2023-06-30T18:21:31.000000Z",
 "country": "001"
+},
+"audit": {
+"event_name": "Registration",
+"source_system": "RGR"
+}
 }
 
 TOPIC_B data - 
 
 {
+"key": {
+"catalog_number": "29525",
+"country": "001"
+},
+"value": {
 "catalog_number": "29525",
 "order_number": "03814",
 "quantity": "2",
 "sales_date": "2023-07-30T18:21:31.000000Z",
 "country": "001"
+},
+"audit": {
+"event_name": "Sales Event",
+"source_system": "SLS"
+}
 }
 
-TOPIC_C data - 
-
+TOPIC_C data -
 {
 "catalog_number": "29525",
 "country": "001",
