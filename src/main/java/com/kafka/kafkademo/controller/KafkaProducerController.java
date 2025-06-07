@@ -1,8 +1,8 @@
 package com.kafka.kafkademo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kafka.kafkademo.model.ValueA;
-import com.kafka.kafkademo.model.ValueB;
+import com.kafka.kafkademo.model.TopicMessageA;
+import com.kafka.kafkademo.model.TopicMessageB;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -25,16 +25,16 @@ public class KafkaProducerController {
     }
 
     @PostMapping("/topicA")
-    public String produceToTopicA(@RequestBody ValueA value) throws Exception {
-        String key = value.catalog_number + "-" + value.country;
-        kafkaTemplate.send(topicA, key, objectMapper.writeValueAsString(value));
+    public String produceToTopicA(@RequestBody TopicMessageA message) throws Exception {
+        String key = message.key.catalog_number + "-" + message.key.country;
+        kafkaTemplate.send(topicA, key, objectMapper.writeValueAsString(message));
         return "Message sent to TOPIC_A";
     }
 
     @PostMapping("/topicB")
-    public String produceToTopicB(@RequestBody ValueB value) throws Exception {
-        String key = value.catalog_number + "-" + value.country;
-        kafkaTemplate.send(topicB, key, objectMapper.writeValueAsString(value));
+    public String produceToTopicB(@RequestBody TopicMessageB message) throws Exception {
+        String key = message.key.catalog_number + "-" + message.key.country;
+        kafkaTemplate.send(topicB, key, objectMapper.writeValueAsString(message));
         return "Message sent to TOPIC_B";
     }
 }
