@@ -58,13 +58,9 @@ public class JoinStreamResults {
                 .filter((key, msg) -> msg != null && msg.value != null && isValid(msg.value, formatter))
                 .map((key, msg) -> KeyValue.pair(buildJoinKey(msg.value.catalog_number, msg.value.country), msg.value));
 
-
-        System.out.println("I am here 1");
         KStream<String, TopicValueB> filteredB = topicBStream
                 .filter((key, msg) -> msg != null && msg.value != null && isValid(msg.value, formatter))
                 .map((key, msg) -> KeyValue.pair(buildJoinKey(msg.value.catalog_number, msg.value.country), msg.value));
-
-        System.out.println("I am here 2");
 
         filteredA.foreach((key, value) -> logger.info("Filtered A: {} => {}", key, value));
         filteredB.foreach((key, value) -> logger.info("Filtered B: {} => {}", key, value));
@@ -72,6 +68,7 @@ public class JoinStreamResults {
         KTable<String, TopicValueA> tableA = filteredA.toTable(Materialized.with(Serdes.String(), valueASerde));
         KTable<String, TopicValueB> tableB = filteredB.toTable(Materialized.with(Serdes.String(), valueBSerde));
 
+        // Join records from topic A and B
         KTable<String, JoinedResult> joined = tableA.join(tableB, (a, b) -> {
             if (a == null || b == null) return null;
             return new JoinedResult(a, b);
